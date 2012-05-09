@@ -1,0 +1,12 @@
+*.o
+*.exe
+*.app
+*.pbproj
+*.plist
+
+Makefile
+
+surfview
+
+moc_*.cpp
+qrc_*.cpp

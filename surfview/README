@@ -1,0 +1,7 @@
+This is an OpenGL application for viewing surfaces.
+
+Right now it's a skeleton app that simply displays a triangle.
+
+As I work through the book I will enhance the application and add new types of surfaces.
+
+I may also add curve visualization.
