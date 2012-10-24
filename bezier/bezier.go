@@ -27,11 +27,11 @@ func scale(val float64, p Point2D) Point2D {
 }
 
 func factorial(n int) int {
-	prod :=1
-	for i:=1; i<=n; i++ {
-		prod *= i
+	facts := []int{1,1,2,6,24,120,720,5040,40320,362880,3628800,39916800,479001600}
+	if n>=len(facts)  || n<0 {
+		return 1
 	}
-	return prod
+	return facts[n]
 }
 func comb(i int, n int) float64 {
 	return float64(factorial(n)/(factorial(i)*factorial(n-i)))
@@ -44,7 +44,8 @@ func Bernstein(i int, n int, t float64) float64 {
 
 
 func randomPoint2D() Point2D {
-	return Point2D{rand.Float64(), rand.Float64()}
+	rval := Point2D{rand.NormFloat64()*0.125 + 0.5, rand.NormFloat64()*0.125+0.5}
+	return rval
 }
 
 func bezP(t float64, pts []Point2D) Point2D {
@@ -92,18 +93,18 @@ func ToSvg(bez *BezierCurve, s *svg.SVG, mp PointMapper) {
 	tmax := 1.0
 	steps := 120
 	dt := (tmax-tmin)/float64(steps)
-	t := tmin+dt
+	t := tmin
 
-	pp := mp(bezP(0.0, bez.cps))
-	s.Circle(int(pp.X), int(pp.Y), 1,"fill:rgb(0,255,0);stroke:rgb(255,0,0)")
-	for i:=1;i<=steps;i++ {
+	xs := make([]int, steps+1)
+	ys := make([]int, steps+1)
+	for i:=0;i<=steps;i++ {
 		cp := bezP(t, bez.cps)
 		mp := mp(cp)
-		s.Circle(int(mp.X), int(mp.Y), 1,"fill:rgb(0,255,0);stroke:rgb(255,0,0)")
-		s.Line(int(pp.X), int(pp.Y), int(mp.X), int(mp.Y), "stroke:rgb(0,0,0)")
-		pp = mp
+		xs[i] = int(mp.X)
+		ys[i] = int(mp.Y)
 		t += dt
 	}
+	s.Polyline(xs, ys, "stroke:rgb(0,0,0);fill:none")
 	
 }
 
@@ -114,11 +115,17 @@ func show_beziers(w http.ResponseWriter, req *http.Request) {
 
 	w.Header().Set("Content-Type", "image/svg+xml")
 
-	var randCurves [400]BezierCurve
+	var randCurves [300]BezierCurve
+	pp1 := randomPoint2D()
+	pp2 := randomPoint2D()
+	pp3 := randomPoint2D()
+	pp4 := randomPoint2D()
 	for i:=0; i<len(randCurves); i++ {
-		randCurves[i] = BezierCurve{[]Point2D{ randomPoint2D(), randomPoint2D(),
-				randomPoint2D(), randomPoint2D(),
-			} }
+		randCurves[i] = BezierCurve{ []Point2D{ pp1, pp2, pp3, pp4 } }
+		pp1 = pp4
+		pp2 = randomPoint2D()
+		pp3 = randomPoint2D()
+		pp4 = randomPoint2D()
 	}
 	s := svg.New(w)
 	xmax := 1920
