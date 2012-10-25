@@ -21,6 +21,9 @@ type BezierCurve struct {
 func add(p1 Point2D, p2 Point2D) Point2D {
 	return Point2D{p1.X + p2.X, p1.Y+p2.Y}
 }
+func sub(p1 Point2D, p2 Point2D) Point2D {
+	return Point2D{p1.X-p2.X, p1.Y-p2.Y}
+}
 
 func scale(val float64, p Point2D) Point2D {
 	return Point2D{val * p.X, val * p.Y}
@@ -33,6 +36,7 @@ func factorial(n int) int {
 	}
 	return facts[n]
 }
+
 func comb(i int, n int) float64 {
 	return float64(factorial(n)/(factorial(i)*factorial(n-i)))
 }
@@ -108,6 +112,10 @@ func ToSvg(bez *BezierCurve, s *svg.SVG, mp PointMapper) {
 	
 }
 
+func linearPoint(p1 Point2D, p2 Point2D) Point2D {
+	return add(p2, scale(0.25, sub(p2, p1)))
+}
+
 func show_beziers(w http.ResponseWriter, req *http.Request) {
 	if len(req.URL.Path) > 1 {
 		return
@@ -123,13 +131,13 @@ func show_beziers(w http.ResponseWriter, req *http.Request) {
 	for i:=0; i<len(randCurves); i++ {
 		randCurves[i] = BezierCurve{ []Point2D{ pp1, pp2, pp3, pp4 } }
 		pp1 = pp4
-		pp2 = randomPoint2D()
+		pp2 = linearPoint(pp3, pp4)
 		pp3 = randomPoint2D()
 		pp4 = randomPoint2D()
 	}
 	s := svg.New(w)
-	xmax := 1920
-	ymax := 1080
+	xmax := 800
+	ymax := 600
 	s.Start(xmax, ymax)
 	s.Title("Bezier Curve")
 
