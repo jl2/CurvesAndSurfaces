@@ -95,7 +95,7 @@ func ToSvg(bez *BezierCurve, s *svg.SVG, mp PointMapper) {
 	// }
 	tmin := 0.0
 	tmax := 1.0
-	steps := 120
+	steps := 40
 	dt := (tmax-tmin)/float64(steps)
 	t := tmin
 
@@ -108,7 +108,7 @@ func ToSvg(bez *BezierCurve, s *svg.SVG, mp PointMapper) {
 		ys[i] = int(mp.Y)
 		t += dt
 	}
-	s.Polyline(xs, ys, "stroke:rgb(0,0,0);fill:none")
+	s.Polyline(xs, ys, "stroke:rgb(0,0,0);fill:none;width:1px;")
 	
 }
 
@@ -123,7 +123,7 @@ func show_beziers(w http.ResponseWriter, req *http.Request) {
 
 	w.Header().Set("Content-Type", "image/svg+xml")
 
-	var randCurves [300]BezierCurve
+	var randCurves [20]BezierCurve
 	pp1 := randomPoint2D()
 	pp2 := randomPoint2D()
 	pp3 := randomPoint2D()
