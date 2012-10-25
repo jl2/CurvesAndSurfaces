@@ -48,7 +48,8 @@ func Bernstein(i int, n int, t float64) float64 {
 
 
 func randomPoint2D() Point2D {
-	rval := Point2D{rand.NormFloat64()*0.125 + 0.5, rand.NormFloat64()*0.125+0.5}
+	// rval := Point2D{rand.NormFloat64()*0.125 + 0.5, rand.NormFloat64()*0.125+0.5}
+	rval := Point2D{rand.Float64(),rand.Float64()}
 	return rval
 }
 
